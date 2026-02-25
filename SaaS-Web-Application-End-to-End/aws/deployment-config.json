@@ -1,0 +1,53 @@
+{
+  "projectName": "saas-web-application",
+  "region": "us-east-1",
+  "frontend": {
+    "service": "s3",
+    "bucketName": "your-saas-app-frontend",
+    "cloudFront": {
+      "distributionId": "your-cloudfront-distribution-id",
+      "domain": "your-app.cloudfront.net"
+    }
+  },
+  "backend": {
+    "service": "ec2",
+    "instanceType": "t3.micro",
+    "keyPair": "your-key-pair-name",
+    "securityGroup": "saas-backend-sg",
+    "ports": [
+      {
+        "fromPort": 80,
+        "toPort": 80,
+        "protocol": "tcp"
+      },
+      {
+        "fromPort": 443,
+        "toPort": 443,
+        "protocol": "tcp"
+      },
+      {
+        "fromPort": 5000,
+        "toPort": 5000,
+        "protocol": "tcp"
+      }
+    ]
+  },
+  "database": {
+    "service": "mongodb-atlas",
+    "clusterTier": "M0",
+    "clusterName": "saas-cluster"
+  },
+  "environment": {
+    "backend": {
+      "NODE_ENV": "production",
+      "PORT": "5000",
+      "MONGODB_URI": "mongodb+srv://<user>:<password>@saas-cluster.mongodb.net/saasdb",
+      "JWT_SECRET": "your-jwt-secret",
+      "JWT_EXPIRE": "7d",
+      "FRONTEND_URL": "https://your-app.cloudfront.net"
+    },
+    "frontend": {
+      "NEXT_PUBLIC_API_URL": "https://your-backend-ec2.amazonaws.com/api"
+    }
+  }
+}

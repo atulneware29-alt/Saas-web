@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaaS Dashboard - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #0f172a;
+      --color-secondary: #1e293b;
+      --color-accent: #3b82f6;
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+      --color-text-primary: #f8fafc;
+      --color-text-secondary: #94a3b8;
+      --color-background: #020617;
+      --color-border: #1e293b;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--color-background);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Background Pattern */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 40% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Login Container */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-card {
+      background: var(--color-primary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #3b82f6, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .logo p {
+      color: var(--color-text-secondary);
+      font-size: 0.875rem;
+      margin-top: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+
+    .input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--color-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-primary);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .input::placeholder {
+      color: var(--color-text-secondary);
+      opacity: 0.6;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--color-secondary);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      background: #334155;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      color: var(--color-text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    .divider span {
+      padding: 0 16px;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+
+    .links a {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 20px;
+      font-size: 0.875rem;
+    }
+
+    /* Dashboard Styles */
+    .dashboard {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 260px;
+      height: 100vh;
+      background: var(--color-primary);
+      border-right: 1px solid var(--color-border);
+      padding: 24px;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #3b82f6, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 40px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      margin-bottom: 4px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: var(--color-secondary);
+      color: var(--color-text-primary);
+    }
+
+    .nav-item.active {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      padding: 32px;
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card {
+      background: var(--color-primary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+    }
+
+    .text-secondary {
+      color: var(--color-text-secondary);
+    }
+
+    .text-sm {
+      font-size: 0.875rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--color-success);
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--color-warning);
+    }
+
+    .badge-info {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--color-accent);
+    }
+
+    .chart-container {
+      height: 300px;
+      margin-top: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+      .grid-4, .grid-3, .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+
+  <!-- Login Page -->
+  <div class="login-container" id="loginPage">
+    <div class="login-card">
+      <div class="logo">
+        <h1>SaaS Dashboard</h1>
+        <p>Sign in to manage your projects</p>
+      </div>
+      
+      <div id="errorMessage" style="display: none;"></div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="label">Email Address</label>
+          <input type="email" class="input" id="email" placeholder="admin@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="label">Password</label>
+          <input type="password" class="input" id="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+      </form>
+      
+      <div class="divider"><span>or</span></div>
+      
+      <button class="btn btn-secondary" onclick="showDashboard()">Continue as Demo User</button>
+      
+      <div class="links">
+        <p>Don't have an account? <a href="#">Sign up</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dashboard" id="dashboard">
+    <nav class="sidebar">
+      <div class="sidebar-logo">SaaS App</div>
+      <a class="nav-item active" onclick="showPage('dashboard')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" onclick="showPage('projects')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+        Projects
+      </a>
+      <a class="nav-item" onclick="showPage('tasks')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+        Tasks
+      </a>
+      <a class="nav-item" onclick="showPage('users')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        Team
+      </a>
+      <a class="nav-item" onclick="showPage('analytics')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        Analytics
+      </a>
+      <a class="nav-item" onclick="logout()" style="margin-top: auto;">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+        Logout
+      </a>
+    </nav>
+
+    <main class="main-content">
+      <!-- Dashboard Page -->
+      <div id="page-dashboard">
+        <div class="header">
+          <h1>Dashboard Overview</h1>
+          <div class="user-menu">
+            <div class="avatar">DA</div>
+            <span>Demo Admin</span>
+          </div>
+        </div>
+
+        <div class="grid grid-4" style="margin-bottom: 32px;">
+          <div class="card stat-card">
+            <div>
+              <p class="text-secondary text-sm">Total Projects</p>
+              <div class="stat-value" style="color: #3b82f6;">24</div>
+            </div>
+            <span class="stat-icon">📁</span>
+          </div>
+          <div class="card stat-card">
+            <div>
+              <p class="text-secondary text-sm">Active Tasks</p>
+              <div class="stat-value" style="color: #f59e0b;">18</div>
+            </div>
+            <span class="stat-icon">🔄</span>
+          </div>
+          <div class="card stat-card">
+            <div>
+              <p class="text-secondary text-sm">Completed</p>
+              <div class="stat-value" style="color: #10b981;">156</div>
+            </div>
+            <span class="stat-icon">✅</span>
+          </div>
+          <div class="card stat-card">
+            <div>
+              <p class="text-secondary text-sm">Team Members</p>
+              <div class="stat-value" style="color: #8b5cf6;">8</div>
+            </div>
+            <span class="stat-icon">👥</span>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <h3 style="margin-bottom: 16px;">Task Status</h3>
+            <div class="chart-container" style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+              <div style="text-align: center;">
+                <div style="width: 100px; height: 100px; border-radius: 50%; background: conic-gradient(#10b981 0deg 180deg, #3b82f6 180deg 270deg, #f59e0b 270deg 320deg, #ef4444 320deg 360deg); margin: 0 auto;"></div>
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span style="width: 12px; height: 12px; background: #10b981; border-radius: 2px;"></span> Completed: 52%</div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span style="width: 12px; height: 12px; background: #3b82f6; border-radius: 2px;"></span> In Progress: 25%</div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span style="width: 12px; height: 12px; background: #f59e0b; border-radius: 2px;"></span> Review: 14%</div>
+                <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 12px; height: 12px; background: #ef4444; border-radius: 2px;"></span> To Do: 9%</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom: 16px;">Projects by Status</h3>
+            <div class="chart-container" style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+              <div style="text-align: center;">
+                <div style="width: 100px; height: 100px; border-radius: 50%; background: conic-gradient(#10b981 0deg 130deg, #3b82f6 130deg 200deg, #f59e0b 200deg 240deg, #ef4444 240deg 360deg); margin: 0 auto;"></div>
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span style="width: 12px; height: 12px; background: #10b981; border-radius: 2px;"></span> Active: 12</div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span style="width: 12px; height: 12px; background: #3b82f6; border-radius: 2px;"></span> Completed: 6</div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span style="width: 12px; height: 12px; background: #f59e0b; border-radius: 2px;"></span> On Hold: 4</div>
+                <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 12px; height: 12px; background: #ef4444; border-radius: 2px;"></span> Cancelled: 2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects Page -->
+      <div id="page-projects" style="display: none;">
+        <div class="header">
+          <h1>Projects</h1>
+          <button class="btn btn-primary" style="width: auto;">+ New Project</button>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+              <h3>Website Redesign</h3>
+              <span class="badge badge-success">Active</span>
+            </div>
+            <p class="text-secondary text-sm" style="margin-bottom: 16px;">Complete redesign of the company website with modern UI/UX</p>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #f59e0b; font-size: 0.875rem; font-weight: 500;">High Priority</span>
+              <span class="text-secondary text-sm">8 tasks</span>
+            </div>
+          </div>
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+              <h3>Mobile App</h3>
+              <span class="badge badge-info">In Progress</span>
+            </div>
+            <p class="text-secondary text-sm" style="margin-bottom: 16px;">iOS and Android mobile application development</p>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #ef4444; font-size: 0.875rem; font-weight: 500;">Urgent</span>
+              <span class="text-secondary text-sm">24 tasks</span>
+            </div>
+          </div>
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+              <h3>API Integration</h3>
+              <span class="badge badge-warning">On Hold</span>
+            </div>
+            <p class="text-secondary text-sm" style="margin-bottom: 16px;">Third-party API integrations for payment and analytics</p>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #3b82f6; font-size: 0.875rem; font-weight: 500;">Medium</span>
+              <span class="text-secondary text-sm">12 tasks</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks Page -->
+      <div id="page-tasks" style="display: none;">
+        <div class="header">
+          <h1>Tasks</h1>
+          <button class="btn btn-primary" style="width: auto;">+ New Task</button>
+        </div>
+        <div class="grid grid-4">
+          <div>
+            <h3 style="margin-bottom: 16px; color: #64748b;">To Do (4)</h3>
+            <div class="card" style="margin-bottom: 12px;">
+              <h4 style="font-size: 0.875rem; margin-bottom: 8px;">Design login page</h4>
+              <div style="display: flex; justify-content: space-between;">
+                <span class="badge badge-warning">High</span>
+                <span class="text-secondary text-sm">Website</span>
+              </div>
+            </div>
+            <div class="card" style="margin-bottom: 12px;">
+              <h4 style="font-size: 0.875rem; margin-bottom: 8px;">Setup database</h4>
+              <div style="display: flex; justify-content: space-between;">
+                <span class="badge badge-info">Medium</span>
+                <span class="text-secondary text-sm">Backend</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-bottom: 16px; color: #f59e0b;">In Progress (3)</h3>
+            <div class="card" style="margin-bottom: 12px;">
+              <h4 style="font-size: 0.875rem; margin-bottom: 8px;">API endpoints</h4>
+              <div style="display: flex; justify-content: space-between;">
+                <span class="badge badge-warning">High</span>
+                <span class="text-secondary text-sm">Backend</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-bottom: 16px; color: #8b5cf6;">Review (2)</h3>
+            <div class="card" style="margin-bottom: 12px;">
+              <h4 style="font-size: 0.875rem; margin-bottom: 8px;">Homepage mockup</h4>
+              <div style="display: flex; justify-content: space-between;">
+                <span class="badge badge-info">Medium</span>
+                <span class="text-secondary text-sm">Design</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-bottom: 16px; color: #10b981;">Completed (12)</h3>
+            <div class="card" style="margin-bottom: 12px;">
+              <h4 style="font-size: 0.875rem; margin-bottom: 8px; text-decoration: line-through; opacity: 0.7;">Project setup</h4>
+              <div style="display: flex; justify-content: space-between;">
+                <span class="badge badge-success">Done</span>
+                <span class="text-secondary text-sm">DevOps</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Page -->
+      <div id="page-users" style="display: none;">
+        <div class="header">
+          <h1>Team Members</h1>
+          <button class="btn btn-primary" style="width: auto;">+ Add User</button>
+        </div>
+        <div class="card" style="padding: 0;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <th style="padding: 16px; text-align: left; color: var(--color-text-secondary);">User</th>
+                <th style="padding: 16px; text-align: left; color: var(--color-text-secondary);">Email</th>
+                <th style="padding: 16px; text-align: left; color: var(--color-text-secondary);">Role</th>
+                <th style="padding: 16px; text-align: left; color: var(--color-text-secondary);">Status</th>
+                <th style="padding: 16px; text-align: left; color: var(--color-text-secondary);">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 16px;"><div style="display: flex; align-items: center; gap: 12px;"><div class="avatar" style="width: 36px; height: 36px; font-size: 0.875rem;">DA</div>Demo Admin</div></td>
+                <td style="padding: 16px; color: var(--color-text-secondary);">admin@example.com</td>
+                <td style="padding: 16px;"><span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">Admin</span></td>
+                <td style="padding: 16px;"><span class="badge badge-success">Active</span></td>
+                <td style="padding: 16px;"><button style="color: var(--color-text-secondary); background: none; border: none; cursor: pointer;">Edit</button></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 16px;"><div style="display: flex; align-items: center; gap: 12px;"><div class="avatar" style="width: 36px; height: 36px; font-size: 0.875rem;">JD</div>John Doe</div></td>
+                <td style="padding: 16px; color: var(--color-text-secondary);">john@example.com</td>
+                <td style="padding: 16px;"><span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">Manager</span></td>
+                <td style="padding: 16px;"><span class="badge badge-success">Active</span></td>
+                <td style="padding: 16px;"><button style="color: var(--color-text-secondary); background: none; border: none; cursor: pointer;">Edit</button></td>
+              </tr>
+              <tr>
+                <td style="padding: 16px;"><div style="display: flex; align-items: center; gap: 12px;"><div class="avatar" style="width: 36px; height: 36px; font-size: 0.875rem;">JS</div>Jane Smith</div></td>
+                <td style="padding: 16px; color: var(--color-text-secondary);">jane@example.com</td>
+                <td style="padding: 16px;"><span class="badge badge-info">User</span></td>
+                <td style="padding: 16px;"><span class="badge badge-success">Active</span></td>
+                <td style="padding: 16px;"><button style="color: var(--color-text-secondary); background: none; border: none; cursor: pointer;">Edit</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Analytics Page -->
+      <div id="page-analytics" style="display: none;">
+        <div class="header">
+          <h1>Analytics</h1>
+        </div>
+        <div class="grid grid-4" style="margin-bottom: 32px;">
+          <div class="card">
+            <p class="text-secondary text-sm">Total Projects</p>
+            <div class="stat-value" style="color: #3b82f6;">24</div>
+          </div>
+          <div class="card">
+            <p class="text-secondary text-sm">Active Projects</p>
+            <div class="stat-value" style="color: #10b981;">12</div>
+          </div>
+          <div class="card">
+            <p class="text-secondary text-sm">Total Tasks</p>
+            <div class="stat-value" style="color: #f59e0b;">198</div>
+          </div>
+          <div class="card">
+            <p class="text-secondary text-sm">Completion Rate</p>
+            <div class="stat-value" style="color: #8b5cf6;">78%</div>
+          </div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3 style="margin-bottom: 16px;">Task Completion Trend</h3>
+            <div style="height: 200px; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px 0;">
+              <div style="text-align: center;">
+                <div style="width: 40px; height: 60px; background: #3b82f6; border-radius: 4px 4px 0 0;"></div>
+                <span class="text-sm text-secondary" style="margin-top: 8px; display: block;">Mon</span>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 40px; height: 90px; background: #3b82f6; border-radius: 4px 4px 0 0;"></div>
+                <span class="text-sm text-secondary" style="margin-top: 8px; display: block;">Tue</span>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 40px; height: 75px; background: #3b82f6; border-radius: 4px 4px 0 0;"></div>
+                <span class="text-sm text-secondary" style="margin-top: 8px; display: block;">Wed</span>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 40px; height: 120px; background: #3b82f6; border-radius: 4px 4px 0 0;"></div>
+                <span class="text-sm text-secondary" style="margin-top: 8px; display: block;">Thu</span>
+              </div>
+              <div style="text-align: center;">
+                <div style="width: 40px; height: 100px; background: #3b82f6; border-radius: 4px 4px 0 0;"></div>
+                <span class="text-sm text-secondary" style="margin-top: 8px; display: block;">Fri</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom: 16px;">Tasks by Priority</h3>
+            <div style="height: 200px; display: flex; flex-direction: column; justify-content: space-around; padding: 20px 0;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="width: 60px; font-size: 0.875rem;">Urgent</span>
+                <div style="flex: 1; height: 24px; background: var(--color-secondary); border-radius: 4px; overflow: hidden;">
+                  <div style="width: 25%; height: 100%; background: #ef4444;"></div>
+                </div>
+                <span style="width: 30px; font-size: 0.875rem; text-align: right;">25%</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="width: 60px; font-size: 0.875rem;">High</span>
+                <div style="flex: 1; height: 24px; background: var(--color-secondary); border-radius: 4px; overflow: hidden;">
+                  <div style="width: 35%; height: 100%; background: #f59e0b;"></div>
+                </div>
+                <span style="width: 30px; font-size: 0.875rem; text-align: right;">35%</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="width: 60px; font-size: 0.875rem;">Medium</span>
+                <div style="flex: 1; height: 24px; background: var(--color-secondary); border-radius: 4px; overflow: hidden;">
+                  <div style="width: 30%; height: 100%; background: #3b82f6;"></div>
+                </div>
+                <span style="width: 30px; font-size: 0.875rem; text-align: right;">30%</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="width: 60px; font-size: 0.875rem;">Low</span>
+                <div style="flex: 1; height: 24px; background: var(--color-secondary); border-radius: 4px; overflow: hidden;">
+                  <div style="width: 10%; height: 100%; background: #64748b;"></div>
+                </div>
+                <span style="width: 30px; font-size: 0.875rem; text-align: right;">10%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Login form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      if (email && password.length >= 8) {
+        showDashboard();
+      } else {
+        showError('Please enter valid credentials. Password must be at least 8 characters.');
+      }
+    });
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.innerHTML = '<div class="error-msg">' + message + '</div>';
+      errorDiv.style.display = 'block';
+    }
+
+    function showDashboard() {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('dashboard').classList.add('active');
+    }
+
+    function showPage(pageName) {
+      // Hide all pages
+      document.getElementById('page-dashboard').style.display = 'none';
+      document.getElementById('page-projects').style.display = 'none';
+      document.getElementById('page-tasks').style.display = 'none';
+      document.getElementById('page-users').style.display = 'none';
+      document.getElementById('page-analytics').style.display = 'none';
+      
+      // Show selected page
+      document.getElementById('page-' + pageName).style.display = 'block';
+      
+      // Update nav active state
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      event.target.closest('.nav-item').classList.add('active');
+    }
+
+    function logout() {
+      document.getElementById('dashboard').classList.remove('active');
+      document.getElementById('loginPage').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
